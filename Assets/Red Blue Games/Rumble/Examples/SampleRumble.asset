@@ -12,19 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6186fd19f43464a1abf091373eb6efa2, type: 3}
   m_Name: SampleRumble
   m_EditorClassIdentifier: 
-  lifetime: 0.1
-  radius: 0
+  lifetime: 10000
+  radius: 1
   intensityMode: 0
-  constantIntensity: 0
+  constantIntensity: 1
   intensityCurveSettings:
     curve: {fileID: 0}
     isLooping: 0
-    period: 0
-  falloffFunction: 2
+    period: 0.01
+  falloffFunction: 1
   rumbleSettings:
     forceFeedback:
-      leftMotor: 0
-      rightMotor: 0
+      leftMotor: 1
+      rightMotor: 1
     screenShake:
-      strength: {x: 0, y: 0}
-      vibrato: 0
+      strength: {x: 1, y: 1}
+      vibrato: 10
