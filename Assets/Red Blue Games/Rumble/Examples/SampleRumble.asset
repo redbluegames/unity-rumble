@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6186fd19f43464a1abf091373eb6efa2, type: 3}
-  m_Name: SmapleRumble
+  m_Name: SampleRumble
   m_EditorClassIdentifier: 
   lifetime: 0.1
   radius: 0

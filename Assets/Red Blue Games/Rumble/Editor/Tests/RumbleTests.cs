@@ -1,9 +1,7 @@
 ﻿namespace RedBlueGames.Sparklite.Tests
 {
-    using System.Collections.Generic;
     using NUnit.Framework;
-    using RedBlueGames.Tools;
-    using UnityEditor;
+    using RedBlueGames.Rumble;
     using UnityEngine;
 
     public class RumbleTests
