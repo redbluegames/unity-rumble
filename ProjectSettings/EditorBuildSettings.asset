@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Red Blue Games/Rumble/Tests/RumbleManagerTests.unity
+    guid: 27d72fa57bb9a4bcbab0160f61555c1a
   m_configObjects: {}

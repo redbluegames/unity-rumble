@@ -1,9 +1,9 @@
+using System.Collections.Generic;
+using RedBlueGames.Tools;
+using UnityEngine;
+    
 namespace RedBlueGames.Rumble
 {
-    using System.Collections.Generic;
-    using RedBlueGames.Tools;
-    using UnityEngine;
-
     /// <summary>
     /// Rumble manager is responsible for tracking outstanding rumbles, resolving their combined effect on each
     /// listener, and applying it.
@@ -28,15 +28,6 @@ namespace RedBlueGames.Rumble
         }
 
         /// <summary>
-        /// Registers a RumbleSource to the tracked rumbles
-        /// </summary>
-        /// <param name="rumble">Rumble to register.</param>
-        public void RegisterRumbleSource(RumbleSource rumble)
-        {
-            this.activeRumbleSources.Add(rumble);
-        }
-
-        /// <summary>
         /// Starts an instance of rumble at the given position.
         /// </summary>
         /// <returns>The spawned rumble.</returns>
@@ -45,16 +36,32 @@ namespace RedBlueGames.Rumble
         public RumbleSource StartRumble(Vector3 position, RumbleInfo rumbleInfo)
         {
             var rumble = this.SpawnRumble(rumbleInfo);
+            RegisterRumbleSource(rumble);
             rumble.transform.position = position;
 
             return rumble;
         }
 
+        public void DestroyRumble(RumbleSource source)
+        {
+            Destroy(source.gameObject);
+            this.UnregisterRumbleSource(source);
+        }
+
+        /// <inheritdoc/>
         protected override void Awake()
         {
             base.Awake();
 
             this.activeRumbleSources = new List<RumbleSource>();
+        }
+
+        /// <summary>
+        /// Unity's Update message. Updates every frame.
+        /// </summary>
+        protected void Update()
+        {
+            this.TickAndKillExpiredSources();
         }
 
         private RumbleSource SpawnRumble(RumbleInfo rumbleInfo)
@@ -64,6 +71,30 @@ namespace RedBlueGames.Rumble
             rumble.Info = rumbleInfo;
 
             return rumble;
+        }
+
+        private void RegisterRumbleSource(RumbleSource rumble)
+        {
+            this.activeRumbleSources.Add(rumble);
+        }
+
+        private void UnregisterRumbleSource(RumbleSource rumble)
+        {
+            this.activeRumbleSources.Remove(rumble);
+        }
+
+        private void TickAndKillExpiredSources()
+        {
+            for (var i = this.activeRumbleSources.Count - 1; i >= 0; --i)
+            {
+                var rumbleSource = this.activeRumbleSources[i];
+                rumbleSource.Tick(Time.deltaTime);
+
+                if (rumbleSource.TimeElapsed >= rumbleSource.Info.Lifetime)
+                {
+                    DestroyRumble(rumbleSource);
+                }
+            }
         }
 
         /* Structs, Sub-Classes =================================================================================================== */

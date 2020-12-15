@@ -1,7 +1,7 @@
-namespace RedBlueGames.Rumble
-{
-    using UnityEngine;
+using UnityEngine;
 
+namespace RedBlueGames.Rumble
+    {
     /// <summary>
     /// A source for Rumble. This handles positional and lifetime information for a RumbleSource
     /// </summary>
@@ -13,6 +13,10 @@ namespace RedBlueGames.Rumble
         private RumbleInfo info;
 
         private float timeElapsed;
+        
+        public bool IsDead { get; private set; }
+
+        public float TimeElapsed => timeElapsed;
 
         /// <summary>
         /// Gets or sets the Info used to define the attributes of this Rumble.
@@ -70,26 +74,14 @@ namespace RedBlueGames.Rumble
             return this.GetCurrentRumble() * scaleFromDistance;
         }
 
+        public void Tick(float deltaTime)
+        {
+            this.timeElapsed += deltaTime;
+        }
+
         protected void Awake()
         {
             this.timeElapsed = 0.0f;
-        }
-
-        protected void Start()
-        {
-            RumbleManager.Instance.RegisterRumbleSource(this);
-        }
-
-        /// <summary>
-        /// Unity's Update message. Updates every frame.
-        /// </summary>
-        protected void Update()
-        {
-            this.timeElapsed += Time.deltaTime;
-            if (this.timeElapsed >= this.Info.Lifetime)
-            {
-                GameObject.Destroy(this.gameObject);
-            }
         }
 
         private Rumble GetCurrentRumble()
