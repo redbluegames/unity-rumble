@@ -8,7 +8,6 @@ namespace RedBlueGames.Rumble
     [System.Serializable]
     public struct Rumble : System.IEquatable<Rumble>
     {
-        /* Consts, Fields ======================================================================================================== */
         public static readonly Rumble Zero = new Rumble();
 
         [SerializeField]
@@ -16,10 +15,6 @@ namespace RedBlueGames.Rumble
 
         [SerializeField]
         private ScreenShakeIntensities screenShake;
-
-        /* Enums  ============================================================================================================== */
-
-        /* Constructors ======================================================================================================== */
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Rumble"/> struct.
@@ -31,8 +26,6 @@ namespace RedBlueGames.Rumble
             this.forceFeedback = forceFeedback;
             this.screenShake = screenShake;
         }
-
-        /* Properties =========================================================================================================== */
 
         /// <summary>
         /// Gets or sets the force feedback for this Rumble

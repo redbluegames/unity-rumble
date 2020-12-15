@@ -8,7 +8,6 @@ namespace RedBlueGames.Rumble
     [System.Serializable]
     public struct ScreenShakeIntensities : System.IEquatable<ScreenShakeIntensities>
     {
-        /* Consts, Fields ======================================================================================================== */
         public static readonly ScreenShakeIntensities Zero = new ScreenShakeIntensities();
 
         [Tooltip("The strength of the shake on the X and Y axis. Defines a box about the source in which a point will be picked" +
@@ -22,10 +21,6 @@ namespace RedBlueGames.Rumble
         [SerializeField]
         private int vibrato;
 
-        /* Enums  ============================================================================================================== */
-
-        /* Constructors ======================================================================================================== */
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ScreenShakeIntensities"/> struct.
         /// </summary>
@@ -36,8 +31,6 @@ namespace RedBlueGames.Rumble
             this.strength = strength;
             this.vibrato = vibrato;
         }
-
-        /* Properties =========================================================================================================== */
 
         /// <summary>
         /// Gets or sets the strength of the shake on the X and Y axis. Defines a box about the source 

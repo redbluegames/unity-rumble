@@ -10,19 +10,13 @@ namespace RedBlueGames.Rumble
     /// </summary>
     public class RumbleManager : Singleton<RumbleManager>
     {
-        /* Consts, Fields ========================================================================================================= */
-
         private List<RumbleSource> activeRumbleSources;
-
-        /* Enums ================================================================================================================== */
-
-        /* Properties ============================================================================================================= */
 
         /// <summary>
         /// Gets the active rumble sources.
         /// </summary>
         /// <value>The active rumble sources.</value>
-        public List<RumbleSource> ActiveRumbleSources
+        public IReadOnlyList<RumbleSource> ActiveRumbleSources
         {
             get
             {
@@ -32,8 +26,6 @@ namespace RedBlueGames.Rumble
                 return this.activeRumbleSources;
             }
         }
-
-        /* Methods ================================================================================================================ */
 
         /// <summary>
         /// Registers a RumbleSource to the tracked rumbles

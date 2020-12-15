@@ -8,7 +8,6 @@ namespace RedBlueGames.Rumble
     [CreateAssetMenu()]
     public class RumbleInfo : ScriptableObject
     {
-        /* Consts, Fields ========================================================================================================= */
         public const float MinLifetime = 0.1f;
         public const float MinRadius = 0.0f;
 
@@ -34,8 +33,6 @@ namespace RedBlueGames.Rumble
 
         [SerializeField]
         private Rumble rumbleSettings;
-
-        /* Enums ================================================================================================================== */
 
         /// <summary>
         /// Rumble falloff function can be used to determine intensity as distance falls off.
@@ -73,8 +70,6 @@ namespace RedBlueGames.Rumble
             /// </summary>
             Curve = 1
         }
-
-        /* Properties ============================================================================================================= */
 
         /// <summary>
         /// Gets or sets the radius for the rumble. Nothing will be felt outside the radius.
@@ -123,8 +118,6 @@ namespace RedBlueGames.Rumble
             set => this.rumbleSettings = value;
         }
 
-        /* Methods ================================================================================================================ */
-
         /// <summary>
         /// Calculates the rumble intensity for a given elapsed time.
         /// </summary>
@@ -156,8 +149,6 @@ namespace RedBlueGames.Rumble
 
             return this.rumbleSettings * rumbleIntensity;
         }
-
-        /* Structs, Sub-Classes =================================================================================================== */
 
         /// <summary>
         /// Settings for a curve that defines Intensity

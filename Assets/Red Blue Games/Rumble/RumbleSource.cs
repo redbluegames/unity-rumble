@@ -7,18 +7,12 @@ namespace RedBlueGames.Rumble
     /// </summary>
     public class RumbleSource : MonoBehaviour
     {
-        /* Consts, Fields ========================================================================================================= */
-
         [Tooltip("The Info used to define the attributes of this Rumble.")]
         // TODO: [EmbeddedInspector]
         [SerializeField]
         private RumbleInfo info;
 
         private float timeElapsed;
-
-        /* Enums ================================================================================================================== */
-
-        /* Properties ============================================================================================================= */
 
         /// <summary>
         /// Gets or sets the Info used to define the attributes of this Rumble.
@@ -39,8 +33,6 @@ namespace RedBlueGames.Rumble
                 this.timeElapsed = 0.0f;
             }
         }
-
-        /* Methods ================================================================================================================ */
 
         /// <summary>
         /// Evaluates the values of the rumble for a given listener position.

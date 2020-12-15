@@ -8,7 +8,6 @@ namespace RedBlueGames.Rumble
     [System.Serializable]
     public struct ForceFeedbackIntensities : System.IEquatable<ForceFeedbackIntensities>
     {
-        /* Consts, Fields ======================================================================================================== */
         public static readonly ForceFeedbackIntensities Zero = new ForceFeedbackIntensities();
 
         [Tooltip("The strength of the left motor on the controller. On XBox One this feels more bass-y.")]
@@ -20,10 +19,6 @@ namespace RedBlueGames.Rumble
         [Range(0.0f, 1.0f)]
         [SerializeField]
         private float rightMotor;
-
-        /* Enums  ============================================================================================================== */
-
-        /* Constructors ======================================================================================================== */
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ForceFeedbackIntensities"/> struct.
@@ -39,8 +34,6 @@ namespace RedBlueGames.Rumble
             this.LeftMotor = this.leftMotor;
             this.RightMotor = this.rightMotor;
         }
-
-        /* Properties =========================================================================================================== */
 
         /// <summary>
         /// Gets or sets the left motor intensity.

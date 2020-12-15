@@ -7,8 +7,6 @@ namespace RedBlueGames.Rumble
     /// </summary>
     public class RumbleListener : MonoBehaviour
     {
-        /* Consts, Fields ========================================================================================================= */
-
         // Ignore warnings about lastAppliedRumble not being used. It's just for debug inspection.
 #pragma warning disable 0414
         private Rumble lastAppliedRumble;
@@ -19,10 +17,6 @@ namespace RedBlueGames.Rumble
 
         private IScreenShakeResponder screenShakeResponder;
 
-        /* Enums ================================================================================================================== */
-
-        /* Properties ============================================================================================================= */
-
         public float ScreenShakeMultiplier { get; set; }
         public float ForceFeedbackMultiplier { get; set; }
 
@@ -31,8 +25,6 @@ namespace RedBlueGames.Rumble
         /// </summary>
         /// <value>The position.</value>
         private Vector3 Position => this.transform.position;
-
-        /* Methods ================================================================================================================ */
 
         /// <summary>
         /// Create an instance of a RumbleListener, which applies rumble to the specified player
@@ -108,7 +100,5 @@ namespace RedBlueGames.Rumble
 
             this.lastResultantRumble = rumble;
         }
-
-        /* Structs, Sub-Classes =================================================================================================== */
     }
 }
