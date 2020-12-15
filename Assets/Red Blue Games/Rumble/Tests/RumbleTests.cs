@@ -1,9 +1,9 @@
-﻿namespace RedBlueGames.Sparklite.Tests
-{
-    using NUnit.Framework;
-    using RedBlueGames.Rumble;
-    using UnityEngine;
+﻿using NUnit.Framework;
+using RedBlueGames.Rumble;
+using UnityEngine;
 
+namespace RedBlueGames.Rumble.Tests
+{
     public class RumbleTests
     {
         [Test]
