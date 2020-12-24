@@ -13,29 +13,24 @@ namespace RedBlueGames.Rumble
         private RumbleInfo info;
 
         private float timeElapsed;
-        
-        public bool IsDead { get; private set; }
 
-        public float TimeElapsed => timeElapsed;
+        public bool IsDead => timeElapsed >= Info.Lifetime;
 
         /// <summary>
         /// Gets or sets the Info used to define the attributes of this Rumble.
         /// </summary>
         /// <value>The Info.</value>
-        public RumbleInfo Info
+        public RumbleInfo Info => this.info;
+
+        public void Initialize(RumbleInfo info)
         {
-            get
-            {
-                return this.info;
-            }
+            this.timeElapsed = 0.0f;
+            this.info = info;
+        }
 
-            set
-            {
-                this.info = value;
-
-                // Reset Lifetime when new info gets assigned
-                this.timeElapsed = 0.0f;
-            }
+        public void Tick(float deltaTime)
+        {
+            this.timeElapsed += deltaTime;
         }
 
         /// <summary>
@@ -72,16 +67,6 @@ namespace RedBlueGames.Rumble
             }
 
             return this.GetCurrentRumble() * scaleFromDistance;
-        }
-
-        public void Tick(float deltaTime)
-        {
-            this.timeElapsed += deltaTime;
-        }
-
-        protected void Awake()
-        {
-            this.timeElapsed = 0.0f;
         }
 
         private Rumble GetCurrentRumble()

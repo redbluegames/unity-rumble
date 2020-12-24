@@ -68,7 +68,7 @@ namespace RedBlueGames.Rumble
         {
             var rumbleObject = new GameObject(string.Concat("[Rumble] ", rumbleInfo.name));
             var rumble = rumbleObject.AddComponent<RumbleSource>();
-            rumble.Info = rumbleInfo;
+            rumble.Initialize(rumbleInfo);
 
             return rumble;
         }
@@ -90,7 +90,7 @@ namespace RedBlueGames.Rumble
                 var rumbleSource = this.activeRumbleSources[i];
                 rumbleSource.Tick(Time.deltaTime);
 
-                if (rumbleSource.TimeElapsed >= rumbleSource.Info.Lifetime)
+                if (rumbleSource.IsDead)
                 {
                     DestroyRumble(rumbleSource);
                 }
