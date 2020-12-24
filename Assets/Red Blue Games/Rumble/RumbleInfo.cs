@@ -23,7 +23,7 @@ namespace RedBlueGames.Rumble
         [Tooltip("The intensity for the Rumble, which affects screen shake and force feedback.")]
         [Range(0.0f, 1.0f)]
         [SerializeField]
-        private float constantIntensity;
+        private float constantIntensity = 1.0f;
 
         [SerializeField]
         private IntensityCurveSettings intensityCurveSettings;
@@ -107,7 +107,11 @@ namespace RedBlueGames.Rumble
         /// Gets the falloff function, used to calculate intensity as distance from center increases.
         /// </summary>
         /// <value>The falloff function.</value>
-        public RumbleFalloffFunction FalloffFunction => this.falloffFunction;
+        public RumbleFalloffFunction FalloffFunction
+        {
+            get => this.falloffFunction;
+            set => this.falloffFunction = value;
+        }
 
         /// <summary>
         /// Gets or sets the rumble settings for this rumble info.
@@ -125,7 +129,6 @@ namespace RedBlueGames.Rumble
         /// <param name="time">Elapsed time.</param>
         public Rumble CalculateRumbleAtTime(float time)
         {
-            float t = (time % this.intensityCurveSettings.Period) / this.intensityCurveSettings.Period;
             float rumbleIntensity = 0.0f;
             switch (this.IntensityOverLifetime)
             {
@@ -133,6 +136,7 @@ namespace RedBlueGames.Rumble
                     rumbleIntensity = this.ConstantIntensity;
                     break;
                 case RumbleInfo.RumbleIntensityMode.Curve:
+                    float t = (time % this.intensityCurveSettings.Period) / this.intensityCurveSettings.Period;
                     if (this.intensityCurveSettings.Curve != null)
                     {
                         rumbleIntensity = this.intensityCurveSettings.Curve.Data.Evaluate(t);

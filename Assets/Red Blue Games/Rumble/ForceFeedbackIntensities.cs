@@ -9,6 +9,7 @@ namespace RedBlueGames.Rumble
     public struct ForceFeedbackIntensities : System.IEquatable<ForceFeedbackIntensities>
     {
         public static readonly ForceFeedbackIntensities Zero = new ForceFeedbackIntensities();
+        public static readonly ForceFeedbackIntensities One = new ForceFeedbackIntensities(1.0f, 1.0f);
 
         [Tooltip("The strength of the left motor on the controller. On XBox One this feels more bass-y.")]
         [Range(0.0f, 1.0f)]

@@ -14,6 +14,8 @@ namespace RedBlueGames.Rumble
 
         private float timeElapsed;
 
+        public bool IsAlive => !IsDead;
+
         public bool IsDead => timeElapsed >= Info.Lifetime;
 
         /// <summary>
@@ -86,7 +88,7 @@ namespace RedBlueGames.Rumble
             float scaleFromDistance = 0.0f;
             float distanceT = 1.0f;
             var directionToListener = listenerPosition - this.transform.position;
-            bool listenerIsInRadius = directionToListener.sqrMagnitude < Mathf.Pow(this.Info.Radius, 2);
+            bool listenerIsInRadius = directionToListener.sqrMagnitude <= Mathf.Pow(this.Info.Radius, 2);
             if (!listenerIsInRadius)
             {
                 return 0.0f;

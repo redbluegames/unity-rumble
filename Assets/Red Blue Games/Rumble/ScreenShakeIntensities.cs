@@ -9,6 +9,9 @@ namespace RedBlueGames.Rumble
     public struct ScreenShakeIntensities : System.IEquatable<ScreenShakeIntensities>
     {
         public static readonly ScreenShakeIntensities Zero = new ScreenShakeIntensities();
+        public static readonly ScreenShakeIntensities One = new ScreenShakeIntensities(Vector2.one, DefaultVibrato);
+
+        private const int DefaultVibrato = 1;
 
         [Tooltip("The strength of the shake on the X and Y axis. Defines a box about the source in which a point will be picked" +
             "to shake towards.")]
@@ -26,7 +29,7 @@ namespace RedBlueGames.Rumble
         /// </summary>
         /// <param name="strength">Strength of the shake.</param>
         /// <param name="vibrato">Vibrato for the shake.</param>
-        public ScreenShakeIntensities(Vector2 strength, int vibrato = 1)
+        public ScreenShakeIntensities(Vector2 strength, int vibrato = DefaultVibrato)
         {
             this.strength = strength;
             this.vibrato = vibrato;
