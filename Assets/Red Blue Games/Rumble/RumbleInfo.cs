@@ -138,12 +138,7 @@ namespace RedBlueGames.Rumble
                     rumbleIntensity = time <= info.lifetime ? info.ConstantIntensity : 0.0f;
                     break;
                 case RumbleIntensityMode.Curve:
-                    float t = (time % info.intensityCurveSettings.Period) / info.intensityCurveSettings.Period;
-                    if (info.intensityCurveSettings.Curve != null)
-                    {
-                        rumbleIntensity = info.intensityCurveSettings.Curve.Data.Evaluate(t);
-                    }
-
+                    rumbleIntensity = info.intensityCurveSettings.Evaluate(time);
                     break;
                 default:
                     var errorMessage = string.Format(
@@ -226,6 +221,17 @@ namespace RedBlueGames.Rumble
             [Tooltip("The period for the intensity curve in seconds.")]
             [SerializeField]
             private float period;
+
+            public float Evaluate(float time)
+            {
+                float t = (time % Period) / Period;
+                if (Curve != null)
+                {
+                    return Curve.Data.Evaluate(t);
+                }
+
+                return 0.0f;
+            }
 
             /// <summary>
             /// Gets or sets the curve that defines Intensity as a value from 0 to 1.0
