@@ -121,37 +121,95 @@ namespace RedBlueGames.Rumble
             get => this.rumbleSettings;
             set => this.rumbleSettings = value;
         }
+        
+        public static Rumble CalculateRumbleFromDistanceSquaredAtTime(RumbleInfo info, float distanceSquared, float time)
+        {
+            var rumble = CalculateRumbleAtTime(info, time);
+            var scale = GetIntensityScalarForDistanceSquared(info, distanceSquared);
+            return rumble * scale;
+        }
 
         /// <summary>
         /// Calculates the rumble intensity for a given elapsed time.
         /// </summary>
         /// <returns>The rumble intensity at time.</returns>
         /// <param name="time">Elapsed time.</param>
-        public Rumble CalculateRumbleAtTime(float time)
+        public static Rumble CalculateRumbleAtTime(RumbleInfo info, float time)
         {
             float rumbleIntensity = 0.0f;
-            switch (this.IntensityOverLifetime)
+            switch (info.IntensityOverLifetime)
             {
-                case RumbleInfo.RumbleIntensityMode.Constant:
-                    rumbleIntensity = this.ConstantIntensity;
+                case RumbleIntensityMode.Constant:
+                    rumbleIntensity = time <= info.lifetime ? info.ConstantIntensity : 0.0f;
                     break;
-                case RumbleInfo.RumbleIntensityMode.Curve:
-                    float t = (time % this.intensityCurveSettings.Period) / this.intensityCurveSettings.Period;
-                    if (this.intensityCurveSettings.Curve != null)
+                case RumbleIntensityMode.Curve:
+                    float t = (time % info.intensityCurveSettings.Period) / info.intensityCurveSettings.Period;
+                    if (info.intensityCurveSettings.Curve != null)
                     {
-                        rumbleIntensity = this.intensityCurveSettings.Curve.Data.Evaluate(t);
+                        rumbleIntensity = info.intensityCurveSettings.Curve.Data.Evaluate(t);
                     }
 
                     break;
                 default:
                     var errorMessage = string.Format(
-                                           "Unrecognized RumbleIntensityMode found on IntensityOverLifetime in RumbleInfo Mode: {0}",
-                                           this.IntensityOverLifetime);
-                    Debug.LogError(errorMessage, this);
+                        "Unrecognized RumbleIntensityMode found on IntensityOverLifetime in RumbleInfo Mode: {0}",
+                        info.IntensityOverLifetime);
+                    Debug.LogError(errorMessage, info);
                     break;
             }
 
-            return this.rumbleSettings * rumbleIntensity;
+            return info.rumbleSettings * rumbleIntensity;
+        }
+
+        private static float GetIntensityScalarForDistanceSquared(RumbleInfo info, float distanceSquared)
+        {
+            float scaleFromDistance = 0.0f;
+            bool listenerIsInRadius = distanceSquared <= Mathf.Pow(info.Radius, 2);
+            if (!listenerIsInRadius)
+            {
+                return 0.0f;
+            }
+
+            switch (info.FalloffFunction)
+            {
+                case RumbleFalloffFunction.None:
+                    scaleFromDistance = 1.0f;
+                    break;
+                case RumbleFalloffFunction.Linear:
+                    if (info.Radius > 0.0f)
+                    {
+                        float distance = Mathf.Sqrt(distanceSquared);
+                        float distanceT = Mathf.Clamp01(1.0f - (distance / info.Radius));
+                        scaleFromDistance = Mathf.Lerp(0.0f, 1.0f, distanceT);
+                    }
+                    else
+                    {
+                        // If Radius is 0 and they are in the radius, they must be right on top of it. Return full intensity.
+                        scaleFromDistance = 1.0f;
+                    }
+
+                    break;
+                case RumbleFalloffFunction.Exponential:
+                    if (info.Radius > 0.0f)
+                    {
+                        // Exponential falloff is y=(x-1)^2, where x is the distance towards the edge of the radius, where 1.0f is
+                        // at the edge.
+                        float distance = Mathf.Sqrt(distanceSquared);
+                        float x = distance / info.Radius;
+                        scaleFromDistance = Mathf.Clamp01(Mathf.Pow(x - 1.0f, 2.0f));
+                    }
+                    else
+                    {
+                        scaleFromDistance = 1.0f;
+                    }
+
+                    break;
+                default:
+                    Debug.Log($"Unrecognized RumbleFalloff mode, {info.FalloffFunction}, on RumbleInfo.", info);
+                    break;
+            }
+
+            return scaleFromDistance;
         }
 
         /// <summary>

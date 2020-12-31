@@ -19,7 +19,7 @@ MonoBehaviour:
   intensityCurveSettings:
     curve: {fileID: 0}
     isLooping: 0
-    period: 0.01
+    period: 10000
   falloffFunction: 1
   rumbleSettings:
     forceFeedback:

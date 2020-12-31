@@ -9,7 +9,7 @@ namespace RedBlueGames.Rumble
     public struct ScreenShakeIntensities : System.IEquatable<ScreenShakeIntensities>
     {
         public static readonly ScreenShakeIntensities Zero = new ScreenShakeIntensities();
-        public static readonly ScreenShakeIntensities One = new ScreenShakeIntensities(Vector2.one, DefaultVibrato);
+        public static readonly ScreenShakeIntensities One = new ScreenShakeIntensities(Vector2.one);
 
         private const int DefaultVibrato = 1;
 

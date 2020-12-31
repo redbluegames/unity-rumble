@@ -59,16 +59,11 @@ namespace RedBlueGames.Rumble
             {
                 return Rumble.Zero;
             }
-
-            float scaleFromDistance = this.GetIntensityScalarForListenerPosition(listenerPosition);
-
-            // User is out of range of the rumble
-            if (scaleFromDistance <= 0.0f)
-            {
-                return Rumble.Zero;
-            }
-
-            return this.GetCurrentRumble() * scaleFromDistance;
+            
+            return RumbleInfo.CalculateRumbleFromDistanceSquaredAtTime(
+                this.Info,
+                (listenerPosition - this.transform.position).sqrMagnitude,
+                this.timeElapsed);
         }
 
         private Rumble GetCurrentRumble()
@@ -79,61 +74,8 @@ namespace RedBlueGames.Rumble
             }
             else
             {
-                return this.Info.CalculateRumbleAtTime(this.timeElapsed);
+                return RumbleInfo.CalculateRumbleAtTime(this.Info, this.timeElapsed);
             }
-        }
-
-        private float GetIntensityScalarForListenerPosition(Vector3 listenerPosition)
-        {
-            float scaleFromDistance = 0.0f;
-            float distanceT = 1.0f;
-            var directionToListener = listenerPosition - this.transform.position;
-            bool listenerIsInRadius = directionToListener.sqrMagnitude <= Mathf.Pow(this.Info.Radius, 2);
-            if (!listenerIsInRadius)
-            {
-                return 0.0f;
-            }
-
-            switch (this.Info.FalloffFunction)
-            {
-                case RumbleInfo.RumbleFalloffFunction.None:
-                    scaleFromDistance = 1.0f;
-                    break;
-                case RumbleInfo.RumbleFalloffFunction.Linear:
-                    if (this.Info.Radius > 0.0f)
-                    {
-                        var distanceToListener = directionToListener.magnitude;
-                        distanceT = Mathf.Clamp01(1.0f - (distanceToListener / this.Info.Radius));
-                        scaleFromDistance = Mathf.Lerp(0.0f, 1.0f, distanceT);
-                    }
-                    else
-                    {
-                        // If Radius is 0 and they are in the radius, they must be right on top of it. Return full intensity.
-                        scaleFromDistance = 1.0f;
-                    }
-
-                    break;
-                case RumbleInfo.RumbleFalloffFunction.Exponential:
-                    if (this.Info.Radius > 0.0f)
-                    {
-                        // Exponential falloff is y=(x-1)^2, where x is the distance towards the edge of the radius, where 1.0f is
-                        // at the edge.
-                        var distanceToListener = directionToListener.magnitude;
-                        float x = distanceToListener / this.Info.Radius;
-                        scaleFromDistance = Mathf.Clamp01(Mathf.Pow(x - 1.0f, 2.0f));
-                    }
-                    else
-                    {
-                        scaleFromDistance = 1.0f;
-                    }
-
-                    break;
-                default:
-                    Debug.LogErrorFormat(this, "Unrecognized RumbleFalloff mode, {0}, on Rumble object.", this.Info.FalloffFunction);
-                    break;
-            }
-
-            return scaleFromDistance;
         }
 
 #if UNITY_EDITOR

@@ -9,6 +9,7 @@ namespace RedBlueGames.Rumble
     public struct Rumble : System.IEquatable<Rumble>
     {
         public static readonly Rumble Zero = new Rumble();
+        public static readonly Rumble One = new Rumble(ForceFeedbackIntensities.One, ScreenShakeIntensities.One);
 
         [SerializeField]
         private ForceFeedbackIntensities forceFeedback;
