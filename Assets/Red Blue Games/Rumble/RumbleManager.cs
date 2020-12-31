@@ -5,7 +5,7 @@ using UnityEngine;
 namespace RedBlueGames.Rumble
 {
     /// <summary>
-    /// Rumble manager is responsible for tracking outstanding rumbles, resolving their combined effect on each
+    /// RumbleIntensity manager is responsible for tracking outstanding rumbles, resolving their combined effect on each
     /// listener, and applying it.
     /// </summary>
     public class RumbleManager : Singleton<RumbleManager>
@@ -13,9 +13,9 @@ namespace RedBlueGames.Rumble
         private List<RumbleSource> activeRumbleSources;
 
         /// <summary>
-        /// Gets the active rumble sources.
+        /// Gets the active rumbleIntensity sources.
         /// </summary>
-        /// <value>The active rumble sources.</value>
+        /// <value>The active rumbleIntensity sources.</value>
         public IReadOnlyList<RumbleSource> ActiveRumbleSources
         {
             get
@@ -28,11 +28,11 @@ namespace RedBlueGames.Rumble
         }
 
         /// <summary>
-        /// Starts an instance of rumble at the given position.
+        /// Starts an instance of rumbleIntensity at the given position.
         /// </summary>
-        /// <returns>The spawned rumble.</returns>
-        /// <param name="position">Position to spawn the rumble object.</param>
-        /// <param name="rumbleInfo">Rumble info.</param>
+        /// <returns>The spawned rumbleIntensity.</returns>
+        /// <param name="position">Position to spawn the rumbleIntensity object.</param>
+        /// <param name="rumbleInfo">RumbleIntensity info.</param>
         public RumbleSource StartRumble(Vector3 position, RumbleInfo rumbleInfo)
         {
             var rumble = this.SpawnRumble(rumbleInfo);
@@ -66,7 +66,7 @@ namespace RedBlueGames.Rumble
 
         private RumbleSource SpawnRumble(RumbleInfo rumbleInfo)
         {
-            var rumbleObject = new GameObject(string.Concat("[Rumble] ", rumbleInfo.name));
+            var rumbleObject = new GameObject(string.Concat("[RumbleIntensity] ", rumbleInfo.name));
             var rumble = rumbleObject.AddComponent<RumbleSource>();
             rumble.Initialize(rumbleInfo);
 

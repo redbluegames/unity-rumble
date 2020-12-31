@@ -31,7 +31,7 @@ namespace RedBlueGames.Rumble.Tests
             Assert.That(source, Is.Not.Null);
             Assert.That(
                 rumbleManager.ActiveRumbleSources.Count, Is.EqualTo(1),
-                "Expected one rumble source outstanding but there were not.");
+                "Expected one rumbleIntensity source outstanding but there were not.");
         }
         
         [UnityTest]
@@ -46,7 +46,7 @@ namespace RedBlueGames.Rumble.Tests
 
             Assert.That(
                 rumbleManager.ActiveRumbleSources.Count, Is.EqualTo(0),
-                "Expected zero outstanding rumble sources but there were not");
+                "Expected zero outstanding rumbleIntensity sources but there were not");
         }
         
         [UnityTest]
@@ -60,7 +60,7 @@ namespace RedBlueGames.Rumble.Tests
 
             Assert.That(
                 rumbleManager.ActiveRumbleSources.Count, Is.EqualTo(0),
-                "Expected zero outstanding rumble sources but there were not");
+                "Expected zero outstanding rumbleIntensity sources but there were not");
         }
         
         [UnityTest]
@@ -75,7 +75,7 @@ namespace RedBlueGames.Rumble.Tests
 
             Assert.That(
                 rumbleManager.ActiveRumbleSources.Count, Is.EqualTo(0),
-                "Expected zero outstanding rumble sources but there were not");
+                "Expected zero outstanding rumbleIntensity sources but there were not");
         }
     }
 }

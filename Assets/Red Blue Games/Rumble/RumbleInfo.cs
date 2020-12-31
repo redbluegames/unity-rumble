@@ -20,7 +20,7 @@ namespace RedBlueGames.Rumble
         [SerializeField]
         private RumbleIntensityMode intensityMode;
 
-        [Tooltip("The intensity for the Rumble, which affects screen shake and force feedback.")]
+        [Tooltip("The scalar for the RumbleIntensity, which affects screen shake and force feedback.")]
         [Range(0.0f, 1.0f)]
         [SerializeField]
         private float constantIntensity = 1.0f;
@@ -32,10 +32,10 @@ namespace RedBlueGames.Rumble
         private RumbleFalloffFunction falloffFunction = RumbleFalloffFunction.Exponential;
 
         [SerializeField]
-        private Rumble rumbleSettings;
+        private RumbleIntensity rumbleIntensitySettings;
 
         /// <summary>
-        /// Rumble falloff function can be used to determine intensity as distance falls off.
+        /// RumbleIntensity falloff function can be used to determine intensity as distance falls off.
         /// </summary>
         public enum RumbleFalloffFunction
         {
@@ -56,7 +56,7 @@ namespace RedBlueGames.Rumble
         }
 
         /// <summary>
-        /// Rumble intensity mode describes the manner in which intensity is calculated over time.
+        /// RumbleIntensity intensity mode describes the manner in which intensity is calculated over time.
         /// </summary>
         public enum RumbleIntensityMode
         {
@@ -88,13 +88,13 @@ namespace RedBlueGames.Rumble
         public RumbleIntensityMode IntensityOverLifetime => this.intensityMode;
 
         /// <summary>
-        /// Gets or sets the intensity of the rumble when set to Constant.
+        /// Gets or sets the intensity of the rumbleIntensity when set to Constant.
         /// </summary>
         /// <value>The intensity.</value>
         public float ConstantIntensity => this.constantIntensity;
 
         /// <summary>
-        /// Gets or sets the lifetime of the rumble.
+        /// Gets or sets the lifetime of the rumbleIntensity.
         /// </summary>
         /// <value>The lifetime.</value>
         public float Lifetime
@@ -114,22 +114,22 @@ namespace RedBlueGames.Rumble
         }
 
         /// <summary>
-        /// Gets or sets the rumble settings for this rumble info.
+        /// Gets or sets the rumbleIntensity settings for this rumbleIntensity info.
         /// </summary>
-        public Rumble RumbleSettings
+        public RumbleIntensity RumbleIntensitySettings
         {
-            get => this.rumbleSettings;
-            set => this.rumbleSettings = value;
+            get => this.rumbleIntensitySettings;
+            set => this.rumbleIntensitySettings = value;
         }
         
-        public static Rumble CalculateRumbleFromDistanceSquaredAtTime(RumbleInfo info, float distanceSquared, float time)
+        public static RumbleIntensity CalculateRumbleFromDistanceSquaredAtTime(RumbleInfo info, float distanceSquared, float time)
         {
             var rumble = CalculateRumbleAtTime(info, time);
             var scale = GetIntensityScalarForDistanceSquared(info, distanceSquared);
             return rumble * scale;
         }
 
-        private static Rumble CalculateRumbleAtTime(RumbleInfo info, float time)
+        private static RumbleIntensity CalculateRumbleAtTime(RumbleInfo info, float time)
         {
             float rumbleIntensity = 0.0f;
             switch (info.IntensityOverLifetime)
@@ -148,7 +148,7 @@ namespace RedBlueGames.Rumble
                     break;
             }
 
-            return info.rumbleSettings * rumbleIntensity;
+            return info.rumbleIntensitySettings * rumbleIntensity;
         }
 
         private static float GetIntensityScalarForDistanceSquared(RumbleInfo info, float distanceSquared)

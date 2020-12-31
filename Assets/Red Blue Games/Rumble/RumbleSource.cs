@@ -3,11 +3,11 @@ using UnityEngine;
 namespace RedBlueGames.Rumble
     {
     /// <summary>
-    /// A source for Rumble. This handles positional and lifetime information for a RumbleSource
+    /// A source for RumbleIntensity. This handles positional and lifetime information for a RumbleSource
     /// </summary>
     public class RumbleSource : MonoBehaviour
     {
-        [Tooltip("The Info used to define the attributes of this Rumble.")]
+        [Tooltip("The Info used to define the attributes of this RumbleIntensity.")]
         // TODO: [EmbeddedInspector]
         [SerializeField]
         private RumbleInfo info;
@@ -19,7 +19,7 @@ namespace RedBlueGames.Rumble
         public bool IsDead => timeElapsed >= Info.Lifetime;
 
         /// <summary>
-        /// Gets or sets the Info used to define the attributes of this Rumble.
+        /// Gets or sets the Info used to define the attributes of this RumbleIntensity.
         /// </summary>
         /// <value>The Info.</value>
         public RumbleInfo Info => this.info;
@@ -36,28 +36,28 @@ namespace RedBlueGames.Rumble
         }
 
         /// <summary>
-        /// Evaluates the values of the rumble for a given listener position.
+        /// Evaluates the values of the rumbleIntensity for a given listener position.
         /// </summary>
-        /// <returns>The rumble.</returns>
+        /// <returns>The rumbleIntensity.</returns>
         /// <param name="listenerPosition">Listener position.</param>
-        public Rumble EvaluateRumble(Vector3 listenerPosition)
+        public RumbleIntensity EvaluateRumble(Vector3 listenerPosition)
         {
             // Assume zero when the parent or self is inactive
             if (!this.gameObject.activeInHierarchy)
             {
-                return Rumble.Zero;
+                return RumbleIntensity.Zero;
             }
 
-            // When disabled, assume zero rumble
+            // When disabled, assume zero rumbleIntensity
             if (!this.enabled)
             {
-                return Rumble.Zero;
+                return RumbleIntensity.Zero;
             }
 
-            // If no info is yet assigned, assume zero rumble
+            // If no info is yet assigned, assume zero rumbleIntensity
             if (this.Info == null)
             {
-                return Rumble.Zero;
+                return RumbleIntensity.Zero;
             }
             
             return RumbleInfo.CalculateRumbleFromDistanceSquaredAtTime(
@@ -66,7 +66,7 @@ namespace RedBlueGames.Rumble
                 this.timeElapsed);
         }
 
-        private Rumble GetRumbleIntensityCenteredOnSource()
+        private RumbleIntensity GetRumbleIntensityCenteredOnSource()
         {
             return this.EvaluateRumble(transform.position);
         }
@@ -76,7 +76,7 @@ namespace RedBlueGames.Rumble
         {
             Gizmos.DrawIcon(transform.position, "RumbleIcon.png", true);
 
-            if (this.GetRumbleIntensityCenteredOnSource() == Rumble.Zero)
+            if (this.GetRumbleIntensityCenteredOnSource() == RumbleIntensity.Zero)
             {
                 return;
             }

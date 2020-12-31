@@ -180,7 +180,7 @@ namespace RedBlueGames.Rumble
         {
             var result = new ForceFeedbackIntensities();
 
-            // Rumble Intensities can never exceed 1.0
+            // RumbleIntensity Intensities can never exceed 1.0
             result.LeftMotor = intensities.LeftMotor * scalar;
             result.RightMotor = intensities.RightMotor * scalar;
 

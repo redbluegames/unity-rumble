@@ -10,7 +10,7 @@ namespace RedBlueGames.Rumble.Tests
         {
             var rumbleInfo = ScriptableObject.CreateInstance<RumbleInfo>();
             rumbleInfo.Radius = 10.0f;
-            rumbleInfo.RumbleSettings = Rumble.One;
+            rumbleInfo.RumbleIntensitySettings = RumbleIntensity.One;
             rumbleInfo.FalloffFunction = RumbleInfo.RumbleFalloffFunction.None;
 
             var rumble = RumbleInfo.CalculateRumbleFromDistanceSquaredAtTime(rumbleInfo, 0.0f, rumbleInfo.Lifetime * 0.5f);
@@ -24,7 +24,7 @@ namespace RedBlueGames.Rumble.Tests
         {
             var rumbleInfo = ScriptableObject.CreateInstance<RumbleInfo>();
             rumbleInfo.Radius = 10.0f;
-            rumbleInfo.RumbleSettings = Rumble.One;
+            rumbleInfo.RumbleIntensitySettings = RumbleIntensity.One;
             rumbleInfo.FalloffFunction = RumbleInfo.RumbleFalloffFunction.None;
 
             var rumble = RumbleInfo.CalculateRumbleFromDistanceSquaredAtTime(rumbleInfo, 0.0f, rumbleInfo.Lifetime * 2.0f);
@@ -38,7 +38,7 @@ namespace RedBlueGames.Rumble.Tests
         {
             var rumbleInfo = ScriptableObject.CreateInstance<RumbleInfo>();
             rumbleInfo.Radius = 10.0f;
-            rumbleInfo.RumbleSettings = Rumble.One;
+            rumbleInfo.RumbleIntensitySettings = RumbleIntensity.One;
             rumbleInfo.FalloffFunction = RumbleInfo.RumbleFalloffFunction.None;
 
             var rumble = RumbleInfo.CalculateRumbleFromDistanceSquaredAtTime(rumbleInfo, 0.0f, 0.0f);
@@ -52,7 +52,7 @@ namespace RedBlueGames.Rumble.Tests
         {
             var rumbleInfo = ScriptableObject.CreateInstance<RumbleInfo>();
             rumbleInfo.Radius = 10.0f;
-            rumbleInfo.RumbleSettings = Rumble.One;
+            rumbleInfo.RumbleIntensitySettings = RumbleIntensity.One;
             rumbleInfo.FalloffFunction = RumbleInfo.RumbleFalloffFunction.None;
 
             var halfDistanceSquared = Mathf.Pow(rumbleInfo.Radius * 0.5f, 2);
@@ -67,7 +67,7 @@ namespace RedBlueGames.Rumble.Tests
         {
             var rumbleInfo = ScriptableObject.CreateInstance<RumbleInfo>();
             rumbleInfo.Radius = 10.0f;
-            rumbleInfo.RumbleSettings = Rumble.One;
+            rumbleInfo.RumbleIntensitySettings = RumbleIntensity.One;
             rumbleInfo.FalloffFunction = RumbleInfo.RumbleFalloffFunction.None;
 
             var distanceSquared = (rumbleInfo.Radius * rumbleInfo.Radius) + 1.0f;
@@ -82,7 +82,7 @@ namespace RedBlueGames.Rumble.Tests
         {
             var rumbleInfo = ScriptableObject.CreateInstance<RumbleInfo>();
             rumbleInfo.Radius = 10.0f;
-            rumbleInfo.RumbleSettings = Rumble.One;
+            rumbleInfo.RumbleIntensitySettings = RumbleIntensity.One;
             rumbleInfo.FalloffFunction = RumbleInfo.RumbleFalloffFunction.Linear;
 
             var rumble = RumbleInfo.CalculateRumbleFromDistanceSquaredAtTime(rumbleInfo, 0.0f, 0.0f);
@@ -96,7 +96,7 @@ namespace RedBlueGames.Rumble.Tests
         {
             var rumbleInfo = ScriptableObject.CreateInstance<RumbleInfo>();
             rumbleInfo.Radius = 10.0f;
-            rumbleInfo.RumbleSettings = Rumble.One;
+            rumbleInfo.RumbleIntensitySettings = RumbleIntensity.One;
             rumbleInfo.FalloffFunction = RumbleInfo.RumbleFalloffFunction.Linear;
 
             var halfDistanceSquared = Mathf.Pow(rumbleInfo.Radius * 0.5f, 2);
@@ -111,7 +111,7 @@ namespace RedBlueGames.Rumble.Tests
         {
             var rumbleInfo = ScriptableObject.CreateInstance<RumbleInfo>();
             rumbleInfo.Radius = 10.0f;
-            rumbleInfo.RumbleSettings = Rumble.One;
+            rumbleInfo.RumbleIntensitySettings = RumbleIntensity.One;
             rumbleInfo.FalloffFunction = RumbleInfo.RumbleFalloffFunction.Linear;
 
             var distanceSquared = (rumbleInfo.Radius * rumbleInfo.Radius) + 1.0f;
@@ -126,7 +126,7 @@ namespace RedBlueGames.Rumble.Tests
         {
             var rumbleInfo = ScriptableObject.CreateInstance<RumbleInfo>();
             rumbleInfo.Radius = 10.0f;
-            rumbleInfo.RumbleSettings = Rumble.One;
+            rumbleInfo.RumbleIntensitySettings = RumbleIntensity.One;
             rumbleInfo.FalloffFunction = RumbleInfo.RumbleFalloffFunction.Exponential;
 
             var rumble = RumbleInfo.CalculateRumbleFromDistanceSquaredAtTime(rumbleInfo, 0.0f, 0.0f);
@@ -140,7 +140,7 @@ namespace RedBlueGames.Rumble.Tests
         {
             var rumbleInfo = ScriptableObject.CreateInstance<RumbleInfo>();
             rumbleInfo.Radius = 10.0f;
-            rumbleInfo.RumbleSettings = Rumble.One;
+            rumbleInfo.RumbleIntensitySettings = RumbleIntensity.One;
             rumbleInfo.FalloffFunction = RumbleInfo.RumbleFalloffFunction.Exponential;
 
             var halfDistanceSquared = Mathf.Pow(rumbleInfo.Radius * 0.5f, 2);
@@ -155,7 +155,7 @@ namespace RedBlueGames.Rumble.Tests
         {
             var rumbleInfo = ScriptableObject.CreateInstance<RumbleInfo>();
             rumbleInfo.Radius = 10.0f;
-            rumbleInfo.RumbleSettings = Rumble.One;
+            rumbleInfo.RumbleIntensitySettings = RumbleIntensity.One;
             rumbleInfo.FalloffFunction = RumbleInfo.RumbleFalloffFunction.Exponential;
 
             var distanceSquared = (rumbleInfo.Radius * rumbleInfo.Radius) + 1.0f;

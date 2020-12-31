@@ -100,9 +100,9 @@ namespace RedBlueGames.Rumble.Editor
             this.intensityCurvePeriodProperty = intensityCurveSettingsProperty.FindPropertyRelative("period");
             this.falloffFunctionProperty = serializedObject.FindProperty("falloffFunction");
 
-            this.rumbleSettingsProperty = serializedObject.FindProperty("rumbleSettings");
+            this.rumbleSettingsProperty = serializedObject.FindProperty("rumbleIntensitySettings");
 
-            // Initialize the animation tracking fields so that you don't see it animate every time you click on a Rumble.
+            // Initialize the animation tracking fields so that you don't see it animate every time you click on a RumbleIntensity.
             var intensityOverLifetime = (RumbleInfo.RumbleIntensityMode)this.intensityModeProperty.enumValueIndex;
             this.constantIntensityAnim.value = intensityOverLifetime == RumbleInfo.RumbleIntensityMode.Constant;
             this.curveIntensityAnim.value = intensityOverLifetime == RumbleInfo.RumbleIntensityMode.Curve;

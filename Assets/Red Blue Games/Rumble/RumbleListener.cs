@@ -3,14 +3,14 @@ namespace RedBlueGames.Rumble
     using UnityEngine;
 
     /// <summary>
-    /// Rumble listeners handle applying force feedback and screen shake for rumble, based on listener position.
+    /// RumbleIntensity listeners handle applying force feedback and screen shake for rumbleIntensity, based on listener position.
     /// </summary>
     public class RumbleListener : MonoBehaviour
     {
-        // Ignore warnings about lastAppliedRumble not being used. It's just for debug inspection.
+        // Ignore warnings about lastAppliedRumbleIntensity not being used. It's just for debug inspection.
 #pragma warning disable 0414
-        private Rumble lastAppliedRumble;
-        private Rumble lastResultantRumble;
+        private RumbleIntensity lastAppliedRumbleIntensity;
+        private RumbleIntensity lastResultantRumbleIntensity;
 #pragma warning restore 0414
 
         private IForceFeedbackResponder forceFeedbackResponder;
@@ -27,9 +27,9 @@ namespace RedBlueGames.Rumble
         private Vector3 Position => this.transform.position;
 
         /// <summary>
-        /// Create an instance of a RumbleListener, which applies rumble to the specified player
+        /// Create an instance of a RumbleListener, which applies rumbleIntensity to the specified player
         /// </summary>
-        /// <param name="listeningPlayer">Listening player - the player to receive the rumble.</param>
+        /// <param name="listeningPlayer">Listening player - the player to receive the rumbleIntensity.</param>
         /// <returns>The created RumbleListener</returns>
         public static RumbleListener Create(IForceFeedbackResponder forceFeedbackResponder, IScreenShakeResponder screenShakeResponder)//Player listeningPlayer)
         {
@@ -61,9 +61,9 @@ namespace RedBlueGames.Rumble
             this.ApplyRumble(aggregatedRumble);
         }
 
-        private Rumble GetAggregateRumbleThisFrame()
+        private RumbleIntensity GetAggregateRumbleThisFrame()
         {
-            var aggregatedRumble = Rumble.Zero;
+            var aggregatedRumble = RumbleIntensity.Zero;
             var rumbleSources = RumbleManager.Instance.ActiveRumbleSources;
             foreach (var rumbleSource in rumbleSources)
             {
@@ -73,12 +73,12 @@ namespace RedBlueGames.Rumble
             return aggregatedRumble;
         }
 
-        private void ApplyRumble(Rumble rumble, float rumbleIntensity = 1.0f, float screenshakeIntensity = 1.0f)
+        private void ApplyRumble(RumbleIntensity rumbleIntensity, float forceFeedbackIntensity = 1.0f, float screenshakeIntensity = 1.0f)
         {
-            // Assign last applied rumble for debugging.
-            this.lastAppliedRumble = rumble;
+            // Assign last applied rumbleIntensity for debugging.
+            this.lastAppliedRumbleIntensity = rumbleIntensity;
 
-            // Modify the supplied Rumble based on whether the game is paused
+            // Modify the supplied RumbleIntensity based on whether the game is paused
             {
                 /* TODO: Convert pausing force feedback to work outside of Sparklite
                 if (TimeManager.Instance.IsPaused)
@@ -89,16 +89,16 @@ namespace RedBlueGames.Rumble
                     // TODO: If we want some vibrations to play while paused (e.g. a confirmation
                     // vibration when changing the Setting in Game Options), then we can create a new
                     // 'PlayWhilePaused' field on RumbleInfo, but then we'd have to implement/change
-                    // Rumble to operate off of real-time instead of game-time... or else that rumble
+                    // RumbleIntensity to operate off of real-time instead of game-time... or else that rumbleIntensity
                     // will still go forever when the game is paused...
-                    rumble.ForceFeedback = ForceFeedbackIntensities.Zero;
+                    rumbleIntensity.ForceFeedback = ForceFeedbackIntensities.Zero;
                 } */
             }
 
-            this.screenShakeResponder.ApplyScreenShake(rumble.ScreenShake);
-            this.forceFeedbackResponder.SetVibration(rumble.ForceFeedback);
+            this.screenShakeResponder.ApplyScreenShake(rumbleIntensity.ScreenShake);
+            this.forceFeedbackResponder.SetVibration(rumbleIntensity.ForceFeedback);
 
-            this.lastResultantRumble = rumble;
+            this.lastResultantRumbleIntensity = rumbleIntensity;
         }
     }
 }

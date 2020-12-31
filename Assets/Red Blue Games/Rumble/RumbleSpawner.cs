@@ -4,7 +4,7 @@ namespace RedBlueGames.Rumble
 {
     public class RumbleSpawner : MonoBehaviour
     {
-        [SerializeField] [Tooltip("The rumble info to bind to the spawned rumble.")]
+        [SerializeField] [Tooltip("The rumbleIntensity info to bind to the spawned rumbleIntensity.")]
         private RumbleInfo rumbleInfo;
 
         // Start is called before the first frame update

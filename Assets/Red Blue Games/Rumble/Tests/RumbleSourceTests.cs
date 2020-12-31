@@ -96,7 +96,7 @@ namespace RedBlueGames.Rumble.Tests
             var expectedScreenShake = new ScreenShakeIntensities(Vector2.one, 5);
             var info = ScriptableObject.CreateInstance<RumbleInfo>();
             info.Radius = 10.0f;
-            info.RumbleSettings = new Rumble(expectedForceFeedback, expectedScreenShake);
+            info.RumbleIntensitySettings = new RumbleIntensity(expectedForceFeedback, expectedScreenShake);
             CreateAndInitializeRumbleSource(info);
 
             var rumble = rumbleSource.EvaluateRumble(rumbleSource.transform.position);
@@ -110,7 +110,7 @@ namespace RedBlueGames.Rumble.Tests
         {
             var info = ScriptableObject.CreateInstance<RumbleInfo>();
             info.Radius = 10.0f;
-            info.RumbleSettings = new Rumble(ForceFeedbackIntensities.One, ScreenShakeIntensities.One);
+            info.RumbleIntensitySettings = new RumbleIntensity(ForceFeedbackIntensities.One, ScreenShakeIntensities.One);
             CreateAndInitializeRumbleSource(info);
             var atEdgeOfRadius = rumbleSource.transform.position + Vector3.one.normalized * (info.Radius + .01f);
 
@@ -125,7 +125,7 @@ namespace RedBlueGames.Rumble.Tests
         {
             var info = ScriptableObject.CreateInstance<RumbleInfo>();
             info.Radius = 10.0f;
-            info.RumbleSettings = new Rumble(ForceFeedbackIntensities.One, ScreenShakeIntensities.One);
+            info.RumbleIntensitySettings = new RumbleIntensity(ForceFeedbackIntensities.One, ScreenShakeIntensities.One);
             info.FalloffFunction = RumbleInfo.RumbleFalloffFunction.Linear;
             CreateAndInitializeRumbleSource(info);
             var expectedForceFeedback = new ForceFeedbackIntensities(0.5f, 0.5f);
@@ -149,7 +149,7 @@ namespace RedBlueGames.Rumble.Tests
 
         private void KillRumbleSource()
         {
-            // Tick the rumble source by its lifetime to make sure it dies correctly
+            // Tick the rumbleIntensity source by its lifetime to make sure it dies correctly
             rumbleSource.Tick(defaultRumbleInfo.Lifetime);
         }
     }
