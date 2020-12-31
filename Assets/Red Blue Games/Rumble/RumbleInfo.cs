@@ -129,12 +129,7 @@ namespace RedBlueGames.Rumble
             return rumble * scale;
         }
 
-        /// <summary>
-        /// Calculates the rumble intensity for a given elapsed time.
-        /// </summary>
-        /// <returns>The rumble intensity at time.</returns>
-        /// <param name="time">Elapsed time.</param>
-        public static Rumble CalculateRumbleAtTime(RumbleInfo info, float time)
+        private static Rumble CalculateRumbleAtTime(RumbleInfo info, float time)
         {
             float rumbleIntensity = 0.0f;
             switch (info.IntensityOverLifetime)

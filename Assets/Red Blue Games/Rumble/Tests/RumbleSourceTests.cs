@@ -117,7 +117,7 @@ namespace RedBlueGames.Rumble.Tests
             var rumble = rumbleSource.EvaluateRumble(atEdgeOfRadius);
 
             Assert.That(rumble.ForceFeedback, Is.EqualTo(ForceFeedbackIntensities.Zero));
-            Assert.That(rumble.ScreenShake, Is.EqualTo(ScreenShakeIntensities.Zero));
+            Assert.That(rumble.ScreenShake, Is.EqualTo(new ScreenShakeIntensities(Vector2.zero, 1)));
         }
 
         [Test]

@@ -66,16 +66,9 @@ namespace RedBlueGames.Rumble
                 this.timeElapsed);
         }
 
-        private Rumble GetCurrentRumble()
+        private Rumble GetRumbleIntensityCenteredOnSource()
         {
-            if (this.Info == null)
-            {
-                return Rumble.Zero;
-            }
-            else
-            {
-                return RumbleInfo.CalculateRumbleAtTime(this.Info, this.timeElapsed);
-            }
+            return this.EvaluateRumble(transform.position);
         }
 
 #if UNITY_EDITOR
@@ -83,12 +76,12 @@ namespace RedBlueGames.Rumble
         {
             Gizmos.DrawIcon(transform.position, "RumbleIcon.png", true);
 
-            if (this.GetCurrentRumble() == Rumble.Zero)
+            if (this.GetRumbleIntensityCenteredOnSource() == Rumble.Zero)
             {
                 return;
             }
 
-            var intensityEstimate = this.GetCurrentRumble().ForceFeedback.LeftMotor;
+            var intensityEstimate = this.GetRumbleIntensityCenteredOnSource().ForceFeedback.LeftMotor;
             float alpha = Mathf.Lerp(0.05f, 0.1f, intensityEstimate);
             UnityEditor.Handles.color = new Color(1.0f, 1.0f, 0.0f, alpha);
             float sphereRadius = this.Info != null ? this.Info.Radius : 0.0f;
