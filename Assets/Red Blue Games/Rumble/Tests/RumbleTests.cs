@@ -1,96 +1,218 @@
 ﻿using NUnit.Framework;
-using RedBlueGames.Rumble;
 using UnityEngine;
 
 namespace RedBlueGames.Rumble.Tests
 {
     public class RumbleTests
     {
-        [Test]
-        public void Equality_Copies_AreEqual()
+        private class MockTimeModulator : ITimeModulator
         {
-            // Arrange
-            var rumbleA = new RumbleIntensity();
-            rumbleA.ForceFeedback = new ForceFeedbackIntensities(1.0f, 0.25f);
-            rumbleA.ScreenShake = new ScreenShakeIntensities(Vector2.one, 1);
+            private RumbleIntensity intensity;
+            
+            public MockTimeModulator(RumbleIntensity intensityOut)
+            {
+                this.intensity = intensityOut;
+            }
 
-            var rumbleB = new RumbleIntensity();
-            rumbleB.ForceFeedback = new ForceFeedbackIntensities(
-                rumbleA.ForceFeedback.LeftMotor,
-                rumbleA.ForceFeedback.RightMotor);
-            rumbleB.ScreenShake = new ScreenShakeIntensities(
-                rumbleA.ScreenShake.Strength,
-                rumbleA.ScreenShake.Vibrato);
+            public RumbleIntensity CalculateIntensity(RumbleIntensity rumbleIntensity, float time) => this.intensity;
+        }
 
-            // Assert
-            Assert.True(rumbleA.Equals(rumbleB), "Expected rumbleIntensity copies to be Equal but they are not.");
+        private class MockDistanceModulator : IDistanceModulator
+        {
+            private RumbleIntensity intensity;
+            
+            public MockDistanceModulator(RumbleIntensity intensityOut)
+            {
+                this.intensity = intensityOut;
+            }
+
+            public RumbleIntensity CalculateFalloff(RumbleIntensity rumbleIntensity, float percentFromCenter) =>
+                this.intensity;
+        } 
+        
+        [Test]
+        public void CalculateRumbleFromPercentFromCenterAtTime_WhileAlive_FullRumble()
+        {
+            var rumble = new Rumble(
+                RumbleIntensity.One, 
+                1.0f,
+                new MockTimeModulator(RumbleIntensity.One),
+                new MockDistanceModulator(RumbleIntensity.One));
+            
+            var intensity = rumble.CalculateRumbleFromPercentFromCenterAtTime(
+                0.0f,
+                rumble.Lifetime * 0.5f);
+
+            Assert.That(intensity, Is.EqualTo(RumbleIntensity.One));
+        }
+        
+        [Test]
+        public void CalculateRumbleFromPercentFromCenterAtTime_WhileDead_ZeroRumble()
+        {
+            var rumble = new Rumble(
+                RumbleIntensity.One, 
+                1.0f,
+                new MockTimeModulator(RumbleIntensity.One),
+                new MockDistanceModulator(RumbleIntensity.One));
+            
+            var intensity = rumble.CalculateRumbleFromPercentFromCenterAtTime(
+                0.0f,
+                rumble.Lifetime * 1.1f);
+
+            Assert.That(intensity, Is.EqualTo(RumbleIntensity.Zero));
+        }
+        
+        /*
+        [Test]
+        public void CalculateRumbleFromDistanceSquaredAtTime_NoFalloffCenteredAtHalfTime_FullRumble()
+        {
+            var rumbleAsset = ScriptableObject.CreateInstance<RumbleAsset>();
+            rumbleAsset.Intensity = RumbleIntensity.One;
+            rumbleAsset.FalloffFunction = RumbleAsset.RumbleFalloffFunction.None;
+
+            var rumble = rumbleAsset.CalculateRumbleFromPercentFromCenterAtTime(
+                0.0f,
+                rumbleAsset.Lifetime * 0.5f);
+
+            Assert.That(rumble.ForceFeedback, Is.EqualTo(ForceFeedbackIntensities.One));
+            Assert.That(rumble.ScreenShake, Is.EqualTo(ScreenShakeIntensities.One));
         }
 
         [Test]
-        public void Equality_UnequalCopies_AreNotEqual()
+        public void CalculateRumbleFromDistanceSquaredAtTime_NoFalloffCenteredAtTimeGreaterThanlifetime_ZeroRumble()
         {
-            // Arrange
-            var rumbleA = new RumbleIntensity();
-            rumbleA.ForceFeedback = new ForceFeedbackIntensities(1.0f, 0.0f);
-            rumbleA.ScreenShake = new ScreenShakeIntensities(Vector2.one, 1);
+            var rumbleAsset = ScriptableObject.CreateInstance<RumbleAsset>();
+            rumbleAsset.Intensity = RumbleIntensity.One;
+            rumbleAsset.FalloffFunction = RumbleAsset.RumbleFalloffFunction.None;
 
-            var rumbleB = new RumbleIntensity();
-            rumbleB.ForceFeedback = new ForceFeedbackIntensities(
-                rumbleA.ForceFeedback.LeftMotor,
-                0.1f);
-            rumbleB.ScreenShake = new ScreenShakeIntensities(
-                rumbleA.ScreenShake.Strength,
-                rumbleA.ScreenShake.Vibrato);
+            var rumble = RumbleAsset.CalculateRumbleFromDistanceSquaredAtTime(rumbleAsset, 0.0f, rumbleAsset.Lifetime * 2.0f);
 
-            // Assert
-            Assert.False(rumbleA.Equals(rumbleB), "Expected unexact rumbleIntensity copies not to be Equal but they are.");
+            Assert.That(rumble.ForceFeedback, Is.EqualTo(ForceFeedbackIntensities.Zero));
+            Assert.That(rumble.ScreenShake, Is.EqualTo(new ScreenShakeIntensities(Vector2.zero)));
         }
 
         [Test]
-        public void Add_NormalCase_Adds()
+        public void CalculateRumbleFromDistanceSquaredAtTime_NoFalloffCenteredAtZeroTime_FullRumble()
         {
-            // Arrange
-            var rumbleA = new RumbleIntensity();
-            rumbleA.ForceFeedback = new ForceFeedbackIntensities(1.0f, 0.25f);
-            rumbleA.ScreenShake = new ScreenShakeIntensities(Vector2.one, 1);
+            var rumbleAsset = ScriptableObject.CreateInstance<RumbleAsset>();
+            rumbleAsset.Intensity = RumbleIntensity.One;
+            rumbleAsset.FalloffFunction = RumbleAsset.RumbleFalloffFunction.None;
 
-            var rumbleB = new RumbleIntensity();
-            rumbleB.ForceFeedback = new ForceFeedbackIntensities(1.0f, 0.25f);
-            rumbleB.ScreenShake = new ScreenShakeIntensities(new Vector2(3.0f, 3.0f), 1);
+            var rumble = RumbleAsset.CalculateRumbleFromDistanceSquaredAtTime(rumbleAsset, 0.0f, 0.0f);
 
-            var expectedAdd = new RumbleIntensity();
-            expectedAdd.ForceFeedback = new ForceFeedbackIntensities(1.0f, 0.5f);
-            expectedAdd.ScreenShake = new ScreenShakeIntensities(new Vector2(4.0f, 4.0f), 1);
-
-            // Act
-
-            var aPlusB = rumbleA + rumbleB;
-
-            // Assert
-            Assert.AreEqual(expectedAdd, aPlusB, "Expected Added Rumbles to be equal but they are not.");
+            Assert.That(rumble.ForceFeedback, Is.EqualTo(ForceFeedbackIntensities.One));
+            Assert.That(rumble.ScreenShake, Is.EqualTo(ScreenShakeIntensities.One));
         }
 
         [Test]
-        public void Scale_NormalCase_Scales()
+        public void CalculateRumbleFromDistanceSquaredAtTime_NoFalloffAtHalfDistance_FullRumble()
         {
-            // Arrange
-            var rumbleA = new RumbleIntensity();
-            rumbleA.ForceFeedback = new ForceFeedbackIntensities(1.0f, 0.25f);
-            rumbleA.ScreenShake = new ScreenShakeIntensities(Vector2.one, 1);
+            var rumbleAsset = ScriptableObject.CreateInstance<RumbleAsset>();
+            rumbleAsset.Intensity = RumbleIntensity.One;
+            rumbleAsset.FalloffFunction = RumbleAsset.RumbleFalloffFunction.None;
 
-            float scalar = 0.5f;
+            var halfDistanceSquared = Mathf.Pow(rumbleAsset.Radius * 0.5f, 2);
+            var rumble = RumbleAsset.CalculateRumbleFromDistanceSquaredAtTime(rumbleAsset, halfDistanceSquared, 0.0f);
 
-            var expectedScaledRumble = new RumbleIntensity();
-            expectedScaledRumble.ForceFeedback = new ForceFeedbackIntensities(0.5f, 0.125f);
-
-            // for now only Strength is scaled for Screenshake
-            expectedScaledRumble.ScreenShake = new ScreenShakeIntensities(new Vector2(0.5f, 0.5f), 1);
-
-            // Act
-            var aScaled = rumbleA * scalar;
-
-            // Assert
-            Assert.AreEqual(expectedScaledRumble, aScaled, "ExpectedScaledRumble did not match actual scaled rumbleIntensity.");
+            Assert.That(rumble.ForceFeedback, Is.EqualTo(ForceFeedbackIntensities.One));
+            Assert.That(rumble.ScreenShake, Is.EqualTo(ScreenShakeIntensities.One));
         }
+
+        [Test]
+        public void CalculateRumbleFromDistanceSquaredAtTime_NoFalloffOutOfRange_ZeroRumble()
+        {
+            var rumbleAsset = ScriptableObject.CreateInstance<RumbleAsset>();
+            rumbleAsset.Intensity = RumbleIntensity.One;
+            rumbleAsset.FalloffFunction = RumbleAsset.RumbleFalloffFunction.None;
+
+            var distanceSquared = (rumbleAsset.Radius * rumbleAsset.Radius) + 1.0f;
+            var rumble = RumbleAsset.CalculateRumbleFromDistanceSquaredAtTime(rumbleAsset, distanceSquared, 0.0f);
+
+            Assert.That(rumble.ForceFeedback, Is.EqualTo(ForceFeedbackIntensities.Zero));
+            Assert.That(rumble.ScreenShake, Is.EqualTo(new ScreenShakeIntensities(Vector2.zero)));
+        }
+
+        [Test]
+        public void CalculateRumbleFromDistanceSquaredAtTime_LinearFalloffCentered_FullRumble()
+        {
+            var rumbleAsset = ScriptableObject.CreateInstance<RumbleAsset>();
+            rumbleAsset.Intensity = RumbleIntensity.One;
+            rumbleAsset.FalloffFunction = RumbleAsset.RumbleFalloffFunction.Linear;
+
+            var rumble = RumbleAsset.CalculateRumbleFromDistanceSquaredAtTime(rumbleAsset, 0.0f, 0.0f);
+
+            Assert.That(rumble.ForceFeedback, Is.EqualTo(ForceFeedbackIntensities.One));
+            Assert.That(rumble.ScreenShake, Is.EqualTo(ScreenShakeIntensities.One));
+        }
+
+        [Test]
+        public void CalculateRumbleFromDistanceSquaredAtTime_LinearFalloffAtHalfDistance_HalfRumble()
+        {
+            var rumbleAsset = ScriptableObject.CreateInstance<RumbleAsset>();
+            rumbleAsset.Intensity = RumbleIntensity.One;
+            rumbleAsset.FalloffFunction = RumbleAsset.RumbleFalloffFunction.Linear;
+
+            var halfDistanceSquared = Mathf.Pow(rumbleAsset.Radius * 0.5f, 2);
+            var rumble = RumbleAsset.CalculateRumbleFromDistanceSquaredAtTime(rumbleAsset, halfDistanceSquared, 0.0f);
+
+            Assert.That(rumble.ForceFeedback, Is.EqualTo( new ForceFeedbackIntensities(0.5f, 0.5f)));
+            Assert.That(rumble.ScreenShake, Is.EqualTo(new ScreenShakeIntensities(new Vector2(0.5f, 0.5f), 1)));
+        }
+
+        [Test]
+        public void CalculateRumbleFromDistanceSquaredAtTime_LinearFalloffOutOfRange_ZeroRumble()
+        {
+            var rumbleAsset = ScriptableObject.CreateInstance<RumbleAsset>();
+            rumbleAsset.Intensity = RumbleIntensity.One;
+            rumbleAsset.FalloffFunction = RumbleAsset.RumbleFalloffFunction.Linear;
+
+            var distanceSquared = (rumbleAsset.Radius * rumbleAsset.Radius) + 1.0f;
+            var rumble = RumbleAsset.CalculateRumbleFromDistanceSquaredAtTime(rumbleAsset, distanceSquared, 0.0f);
+
+            Assert.That(rumble.ForceFeedback, Is.EqualTo(ForceFeedbackIntensities.Zero));
+            Assert.That(rumble.ScreenShake, Is.EqualTo(new ScreenShakeIntensities(Vector2.zero)));
+        }
+
+        [Test]
+        public void CalculateRumbleFromDistanceSquaredAtTime_ExponentialFalloffCentered_FullRumble()
+        {
+            var rumbleAsset = ScriptableObject.CreateInstance<RumbleAsset>();
+            rumbleAsset.Intensity = RumbleIntensity.One;
+            rumbleAsset.FalloffFunction = RumbleAsset.RumbleFalloffFunction.Exponential;
+
+            var rumble = RumbleAsset.CalculateRumbleFromDistanceSquaredAtTime(rumbleAsset, 0.0f, 0.0f);
+
+            Assert.That(rumble.ForceFeedback, Is.EqualTo(ForceFeedbackIntensities.One));
+            Assert.That(rumble.ScreenShake, Is.EqualTo(ScreenShakeIntensities.One));
+        }
+
+        [Test]
+        public void CalculateRumbleFromDistanceSquaredAtTime_ExponentialFalloffAtHalfDistance_QuarterRumble()
+        {
+            var rumbleAsset = ScriptableObject.CreateInstance<RumbleAsset>();
+            rumbleAsset.Intensity = RumbleIntensity.One;
+            rumbleAsset.FalloffFunction = RumbleAsset.RumbleFalloffFunction.Exponential;
+
+            var halfDistanceSquared = Mathf.Pow(rumbleAsset.Radius * 0.5f, 2);
+            var rumble = RumbleAsset.CalculateRumbleFromDistanceSquaredAtTime(rumbleAsset, halfDistanceSquared, 0.0f);
+
+            Assert.That(rumble.ForceFeedback, Is.EqualTo( new ForceFeedbackIntensities(0.25f, 0.25f)));
+            Assert.That(rumble.ScreenShake, Is.EqualTo(new ScreenShakeIntensities(new Vector2(0.25f, 0.25f), 1)));
+        }
+
+        [Test]
+        public void CalculateRumbleFromDistanceSquaredAtTime_ExponentialFalloffOutOfRange_ZeroRumble()
+        {
+            var rumbleAsset = ScriptableObject.CreateInstance<RumbleAsset>();
+            rumbleAsset.Intensity = RumbleIntensity.One;
+            rumbleAsset.FalloffFunction = RumbleAsset.RumbleFalloffFunction.Exponential;
+
+            var distanceSquared = (rumbleAsset.Radius * rumbleAsset.Radius) + 1.0f;
+            var rumble = RumbleAsset.CalculateRumbleFromDistanceSquaredAtTime(rumbleAsset, distanceSquared, 0.0f);
+
+            Assert.That(rumble.ForceFeedback, Is.EqualTo(ForceFeedbackIntensities.Zero));
+            Assert.That(rumble.ScreenShake, Is.EqualTo(new ScreenShakeIntensities(Vector2.zero)));
+        }
+        */
     }
 }

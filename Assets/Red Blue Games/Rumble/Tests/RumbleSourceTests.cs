@@ -5,8 +5,8 @@ namespace RedBlueGames.Rumble.Tests
 {
     public class RumbleSourceTests
     {
+        private const float DefaultRadius = 10.0f; 
         private readonly RumbleAsset defaultRumbleAsset = ScriptableObject.CreateInstance<RumbleAsset>();
-        private const float defaultRadius = 10.0f; 
 
         private RumbleSource rumbleSource;
 
@@ -20,7 +20,7 @@ namespace RedBlueGames.Rumble.Tests
         [Test]
         public void Initialize_Default_IsAlive()
         {
-            CreateAndInitializeRumbleSource(defaultRumbleAsset, defaultRadius);
+            CreateAndInitializeRumbleSource(defaultRumbleAsset, DefaultRadius);
 
             Assert.That(rumbleSource.IsAlive);
         }
@@ -28,7 +28,7 @@ namespace RedBlueGames.Rumble.Tests
         [Test]
         public void Initialize_DeadSource_IsAlive()
         {
-            CreateAndInitializeRumbleSource(defaultRumbleAsset, defaultRadius);
+            CreateAndInitializeRumbleSource(defaultRumbleAsset, DefaultRadius);
             KillRumbleSource();
 
             rumbleSource.Initialize(defaultRumbleAsset, 1.0f);
@@ -39,7 +39,7 @@ namespace RedBlueGames.Rumble.Tests
         [Test]
         public void IsAlive_QueriedWhileTimeRemains_IsTrue()
         {
-            CreateAndInitializeRumbleSource(defaultRumbleAsset, defaultRadius);
+            CreateAndInitializeRumbleSource(defaultRumbleAsset, DefaultRadius);
 
             // Not we only test that Alive and Dead are not equal in the IsAlive and IsDead tests, so that we can assume
             // it in other tests.
@@ -51,7 +51,7 @@ namespace RedBlueGames.Rumble.Tests
         [Test]
         public void IsDead_WithZeroRemainingTime_IsTrue()
         {
-            CreateAndInitializeRumbleSource(defaultRumbleAsset, defaultRadius);
+            CreateAndInitializeRumbleSource(defaultRumbleAsset, DefaultRadius);
             KillRumbleSource();
 
             Assert.That(rumbleSource.IsAlive, Is.False,
@@ -62,7 +62,7 @@ namespace RedBlueGames.Rumble.Tests
         [Test]
         public void Tick_TimeRemains_StillAlive()
         {
-            CreateAndInitializeRumbleSource(defaultRumbleAsset, defaultRadius);
+            CreateAndInitializeRumbleSource(defaultRumbleAsset, DefaultRadius);
 
             rumbleSource.Tick(defaultRumbleAsset.Lifetime * 0.5f);
 
@@ -72,7 +72,7 @@ namespace RedBlueGames.Rumble.Tests
         [Test]
         public void Tick_TimeExpires_IsDead()
         {
-            CreateAndInitializeRumbleSource(defaultRumbleAsset, defaultRadius);
+            CreateAndInitializeRumbleSource(defaultRumbleAsset, DefaultRadius);
 
             rumbleSource.Tick(defaultRumbleAsset.Lifetime);
 
@@ -82,7 +82,7 @@ namespace RedBlueGames.Rumble.Tests
         [Test]
         public void Tick_DeadSource_StillDead()
         {
-            CreateAndInitializeRumbleSource(defaultRumbleAsset, defaultRadius);
+            CreateAndInitializeRumbleSource(defaultRumbleAsset, DefaultRadius);
             KillRumbleSource();
 
             rumbleSource.Tick(defaultRumbleAsset.Lifetime);
@@ -90,18 +90,16 @@ namespace RedBlueGames.Rumble.Tests
             Assert.That(rumbleSource.IsDead);
         }
 
-        /*
         [Test]
         public void EvaluateRumble_ListenerAtCenter_FullStrength()
         {
+            var rumbleAsset = ScriptableObject.CreateInstance<RumbleAsset>();
+            rumbleAsset.Lifetime = 1.0f;
             var expectedForceFeedback = new ForceFeedbackIntensities(1.0f, 0.7f);
             var expectedScreenShake = new ScreenShakeIntensities(Vector2.one, 5);
-            var info = ScriptableObject.CreateInstance<RumbleInfo>();
-            info.Radius = 10.0f;
-            info.RumbleIntensitySettings = new RumbleIntensity(expectedForceFeedback, expectedScreenShake);
-            var rumbleAsset = ScriptableObject.CreateInstance<RumbleAsset>();
+            rumbleAsset.Intensity = new RumbleIntensity(expectedForceFeedback, expectedScreenShake);
 
-            CreateAndInitializeRumbleSource(info, 10.0f);
+            CreateAndInitializeRumbleSource(rumbleAsset, 10.0f);
 
             var rumble = rumbleSource.EvaluateRumble(rumbleSource.transform.position);
 
@@ -112,38 +110,42 @@ namespace RedBlueGames.Rumble.Tests
         [Test]
         public void EvaluateRumble_ListenerOutOfRange_ZeroRumble()
         {
-            var info = ScriptableObject.CreateInstance<RumbleInfo>();
-            info.Radius = 10.0f;
-            info.RumbleIntensitySettings = new RumbleIntensity(ForceFeedbackIntensities.One, ScreenShakeIntensities.One);
-            CreateAndInitializeRumbleSource(info, 10.0f);
-            var atEdgeOfRadius = rumbleSource.transform.position + Vector3.one.normalized * (info.Radius + .01f);
+            var rumbleAsset = ScriptableObject.CreateInstance<RumbleAsset>();
+            rumbleAsset.Lifetime = 1.0f;
+            var expectedForceFeedback = new ForceFeedbackIntensities(1.0f, 0.7f);
+            var expectedScreenShake = new ScreenShakeIntensities(Vector2.one, 5);
+            rumbleAsset.Intensity = new RumbleIntensity(expectedForceFeedback, expectedScreenShake);
+            float sourceRadius = DefaultRadius;
+            CreateAndInitializeRumbleSource(rumbleAsset, sourceRadius);
 
+            var atEdgeOfRadius = rumbleSource.transform.position + Vector3.one.normalized * (sourceRadius + .01f);
             var rumble = rumbleSource.EvaluateRumble(atEdgeOfRadius);
 
             Assert.That(rumble.ForceFeedback, Is.EqualTo(ForceFeedbackIntensities.Zero));
-            Assert.That(rumble.ScreenShake, Is.EqualTo(new ScreenShakeIntensities(Vector2.zero, 1)));
+            Assert.That(rumble.ScreenShake, Is.EqualTo(new ScreenShakeIntensities(Vector2.zero, 5)));
         }
 
         [Test]
         public void EvaluateRumble_ListenerHalfwayLinearFalloff_HalfRumble()
         {
-            var info = ScriptableObject.CreateInstance<RumbleInfo>();
-            info.Radius = 10.0f;
-            info.RumbleIntensitySettings = new RumbleIntensity(ForceFeedbackIntensities.One, ScreenShakeIntensities.One);
-            info.FalloffFunction = RumbleInfo.RumbleFalloffFunction.Linear;
-            CreateAndInitializeRumbleSource(info, 10.0f);
-            var expectedForceFeedback = new ForceFeedbackIntensities(0.5f, 0.5f);
-            var expectedScreenShake = new ScreenShakeIntensities(
-                new Vector2(0.5f, 0.5f),
-                ScreenShakeIntensities.One.Vibrato);
-            var halfRadiusFromSource = rumbleSource.transform.position + Vector3.one.normalized * info.Radius * 0.5f;
+            var rumbleAsset = ScriptableObject.CreateInstance<RumbleAsset>();
+            rumbleAsset.Lifetime = 1.0f;
+            rumbleAsset.Intensity = new RumbleIntensity(
+                new ForceFeedbackIntensities(1.0f, 0.7f),
+                new ScreenShakeIntensities(Vector2.one, 5));
+            rumbleAsset.CurveDistanceModulator = new CurveDistanceModulator(
+                AnimationCurve.Linear(0.0f, 1.0f, 1.0f, 0.0f));
+            float sourceRadius = DefaultRadius;
+            CreateAndInitializeRumbleSource(rumbleAsset, sourceRadius);
 
+            var expectedForceFeedback = new ForceFeedbackIntensities(0.5f, 0.35f);
+            var expectedScreenShake = new ScreenShakeIntensities(new Vector2(0.5f, 0.5f), 5);
+            var halfRadiusFromSource = rumbleSource.transform.position + Vector3.one.normalized * sourceRadius * 0.5f;
             var rumble = rumbleSource.EvaluateRumble(halfRadiusFromSource);
 
             Assert.That(rumble.ForceFeedback, Is.EqualTo(expectedForceFeedback));
             Assert.That(rumble.ScreenShake, Is.EqualTo(expectedScreenShake));
         }
-        */
 
         private void CreateAndInitializeRumbleSource(RumbleAsset rumbleAsset, float radius)
         {
