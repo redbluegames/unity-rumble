@@ -33,9 +33,9 @@ namespace RedBlueGames.Rumble
         /// <returns>The spawned rumbleIntensity.</returns>
         /// <param name="position">Position to spawn the rumbleIntensity object.</param>
         /// <param name="rumbleInfo">RumbleIntensity info.</param>
-        public RumbleSource StartRumble(Vector3 position, RumbleInfo rumbleInfo)
+        public RumbleSource StartRumble(Vector3 position, RumbleAsset rumbleAsset, float radius)
         {
-            var rumble = this.SpawnRumble(rumbleInfo);
+            var rumble = this.SpawnRumble(rumbleAsset, radius);
             RegisterRumbleSource(rumble);
             rumble.transform.position = position;
 
@@ -64,11 +64,11 @@ namespace RedBlueGames.Rumble
             this.TickAndKillExpiredSources();
         }
 
-        private RumbleSource SpawnRumble(RumbleInfo rumbleInfo)
+        private RumbleSource SpawnRumble(RumbleAsset rumbleAsset, float radius)
         {
-            var rumbleObject = new GameObject(string.Concat("[RumbleIntensity] ", rumbleInfo.name));
+            var rumbleObject = new GameObject(string.Concat("[RumbleIntensity] ", rumbleAsset.name));
             var rumble = rumbleObject.AddComponent<RumbleSource>();
-            rumble.Initialize(rumbleInfo);
+            rumble.Initialize(rumbleAsset, radius);
 
             return rumble;
         }

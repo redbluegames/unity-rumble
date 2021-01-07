@@ -11,6 +11,13 @@ namespace RedBlueGames.Rumble
         // TODO: [EmbeddedInspector]
         [SerializeField]
         private RumbleInfo info;
+        
+        [Tooltip("The Info used to define the attributes of this RumbleIntensity.")]
+        // TODO: [EmbeddedInspector]
+        [SerializeField]
+        private RumbleAsset rumbleAsset;
+
+        private CircleBounds circleBounds;
 
         private float timeElapsed;
 
@@ -18,16 +25,20 @@ namespace RedBlueGames.Rumble
 
         public bool IsDead => timeElapsed >= Info.Lifetime;
 
+        private IRumbleBounds Bounds => circleBounds;
+
         /// <summary>
         /// Gets or sets the Info used to define the attributes of this RumbleIntensity.
         /// </summary>
         /// <value>The Info.</value>
         public RumbleInfo Info => this.info;
-
-        public void Initialize(RumbleInfo info)
+        
+        public void Initialize(RumbleAsset rumbleAsset, float radius)
         {
             this.timeElapsed = 0.0f;
             this.info = info;
+            this.rumbleAsset = rumbleAsset;
+            this.circleBounds = new CircleBounds(this.transform.position, radius);
         }
 
         public void Tick(float deltaTime)
@@ -54,16 +65,16 @@ namespace RedBlueGames.Rumble
                 return RumbleIntensity.Zero;
             }
 
-            // If no info is yet assigned, assume zero rumbleIntensity
-            if (this.Info == null)
+            // If no rumbleAsset is yet assigned, assume zero rumbleIntensity
+            if (this.rumbleAsset == null)
             {
                 return RumbleIntensity.Zero;
             }
-            
-            return RumbleInfo.CalculateRumbleFromDistanceSquaredAtTime(
-                this.Info,
-                (listenerPosition - this.transform.position).sqrMagnitude,
-                this.timeElapsed);
+
+            return rumbleAsset.CalculateRumbleFromPercentFromCenterAtTime(
+                Bounds.GetPercentFromCenter(listenerPosition),
+                this.timeElapsed
+            );
         }
 
         private RumbleIntensity GetRumbleIntensityCenteredOnSource()
@@ -84,8 +95,7 @@ namespace RedBlueGames.Rumble
             var intensityEstimate = this.GetRumbleIntensityCenteredOnSource().ForceFeedback.LeftMotor;
             float alpha = Mathf.Lerp(0.05f, 0.1f, intensityEstimate);
             UnityEditor.Handles.color = new Color(1.0f, 1.0f, 0.0f, alpha);
-            float sphereRadius = this.Info != null ? this.Info.Radius : 0.0f;
-            UnityEditor.Handles.DrawSolidDisc(this.transform.position, Vector3.forward, sphereRadius);
+            Bounds.DrawGizmo();
         }
 #endif
 
