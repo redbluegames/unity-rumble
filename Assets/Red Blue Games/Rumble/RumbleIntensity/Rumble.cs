@@ -27,11 +27,14 @@
             float percentFromCenter,
             float time)
         {
-            if (Lifetime >= 0.0f && time > Lifetime) return RumbleIntensity.Zero;
+            if (Lifetime >= 0.0f && time > Lifetime)
+            {
+                return RumbleIntensity.Zero;
+            }
 
             var rumbleAtTime = TimeModulator.CalculateIntensity(FullRumbleIntensity, time);
-            var rumbleAtDistance = DistanceModulator.CalculateFalloff(rumbleAtTime, percentFromCenter);
-            return rumbleAtDistance;
+            var resultantRumble = DistanceModulator.CalculateFalloff(rumbleAtTime, percentFromCenter);
+            return resultantRumble;
         }
     }
 }

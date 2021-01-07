@@ -10,11 +10,6 @@ namespace RedBlueGames.Rumble
         [Tooltip("The Info used to define the attributes of this RumbleIntensity.")]
         // TODO: [EmbeddedInspector]
         [SerializeField]
-        private RumbleInfo info;
-        
-        [Tooltip("The Info used to define the attributes of this RumbleIntensity.")]
-        // TODO: [EmbeddedInspector]
-        [SerializeField]
         private RumbleAsset rumbleAsset;
 
         private CircleBounds circleBounds;
@@ -23,20 +18,13 @@ namespace RedBlueGames.Rumble
 
         public bool IsAlive => !IsDead;
 
-        public bool IsDead => timeElapsed >= Info.Lifetime;
+        public bool IsDead => timeElapsed >= rumbleAsset.Lifetime;
 
         private IRumbleBounds Bounds => circleBounds;
-
-        /// <summary>
-        /// Gets or sets the Info used to define the attributes of this RumbleIntensity.
-        /// </summary>
-        /// <value>The Info.</value>
-        public RumbleInfo Info => this.info;
         
         public void Initialize(RumbleAsset rumbleAsset, float radius)
         {
             this.timeElapsed = 0.0f;
-            this.info = info;
             this.rumbleAsset = rumbleAsset;
             this.circleBounds = new CircleBounds(this.transform.position, radius);
         }
