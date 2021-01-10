@@ -6,10 +6,6 @@ namespace RedBlueGames.Rumble
     {
         [SerializeField]
         [Tooltip("The rumbleIntensity info to bind to the spawned rumbleIntensity.")]
-        private RumbleInfo rumbleInfo;
-        
-        [SerializeField]
-        [Tooltip("The rumbleIntensity info to bind to the spawned rumbleIntensity.")]
         private RumbleAsset rumbleAsset;
 
         [SerializeField]

@@ -8,9 +8,9 @@ namespace RedBlueGames.Rumble
         
         private float Radius { get; }
 
-        public CircleBounds(Vector3 position, float radius)
+        public CircleBounds(Vector3 center, float radius)
         {
-            Center = position;
+            Center = center;
             Radius = radius;
         }
 
