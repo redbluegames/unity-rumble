@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using UnityEngine;
 
 namespace RedBlueGames.Rumble.Tests
 {
