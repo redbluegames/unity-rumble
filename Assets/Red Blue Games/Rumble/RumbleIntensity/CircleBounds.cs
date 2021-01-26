@@ -4,25 +4,25 @@ namespace RedBlueGames.Rumble
 {
     public class CircleBounds : IRumbleBounds
     {
-        public Vector3 Center { get; }
+        public Vector3 WorldCenter { get; }
         
         private float Radius { get; }
 
-        public CircleBounds(Vector3 center, float radius)
+        public CircleBounds(Vector3 worldCenter, float radius)
         {
-            Center = center;
+            WorldCenter = worldCenter;
             Radius = radius;
         }
 
         public float GetPercentFromCenter(Vector3 position)
         {
-            return (position - Center).magnitude / Radius;
+            return (position - WorldCenter).magnitude / Radius;
         }
 
         public void DrawGizmo()
         {
 #if UNITY_EDITOR
-            UnityEditor.Handles.DrawSolidDisc(Center, Vector3.forward, Radius);
+            UnityEditor.Handles.DrawSolidDisc(WorldCenter, Vector3.forward, Radius);
 #endif
         }
     }
